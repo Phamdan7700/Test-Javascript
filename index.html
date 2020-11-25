@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
@@ -39,8 +40,20 @@
         <!-- Khung cau hoi -->
 
         <div id="question-contanier"> </div>
-        <div class="result">
-            <button id="result-btn" class="btn">Kết Quả</button>
+
+        <div id="result-btn">
+            <button id="result-btn-click" class="btn">Kết Quả</button>
+        </div>
+    </div>
+
+    <div id="popup">
+        <div id="popup-confirm">
+            <div class="confirm-icon"><img src="img/question_mark_PNG119.png" alt="img" width="100px"></div>
+            <div id="confirm-text"></div>
+            <div id="confirm-btn">
+                <button class="btn btn-ok" id="confirm-btn-Ok">Ok</button>
+                <button class="btn btn-cancel" id="confirm-btn-cancel">Trở Lại</button>
+            </div>
         </div>
     </div>
 
