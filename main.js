@@ -1,10 +1,10 @@
-var minutes = 1;
-var seconds = 00;
+var minutes = 0;
+var seconds = 10;
 var t;
 var numOfCorrect = 0;
 var numOfIncorrect = 0;
 var numOfNotCheck = 10;
-var questionsCollection = [
+const questionsCollection = [
     {
         question: 'Đội bóng đã từng đoạt nhiều chức vô địch Copa America nhất?',
         answer: [
@@ -309,7 +309,7 @@ var questionsCollection = [
 
 
 ];
-var questionArr = [];
+const questionArr = [];
 var question_index;
 var numOfQuestion = 10;
 
@@ -318,49 +318,69 @@ var numOfQuestion = 10;
 
 class Test {
     constructor() {
+        this.result = "";
+        this.welcomeText = document.getElementById('welcomeText');
         this.btnWelcome = document.getElementById('btn-welcome');
         this.timeCountdown = document.getElementById('time-coutdown');
         this.timeCountdown.innerHTML = this.formatNumber(minutes) + ' Phút :' + this.formatNumber(seconds) + ' Giây ';
         this.startTestBtn = document.getElementById('start-btn-question');
         this.resultBtn = document.getElementById('result-btn-click');
         this.popupBox = document.getElementById('popup');
-        this.btnWelcome.addEventListener('click', this.showQuestionScreen);
         this.resetBtn = document.getElementById('reset-btn-question');
 
+        this.btnWelcome.onclick = this.showQuestionScreen;
         this.randomQuestion();
         this.resetBtn.addEventListener('click', () => {
-            this.refresh();
+            this.popupConfirm("Bạn muốn làm lại từ đầu !!!", this.refresh);
+
         });
-        this.startTestBtn.addEventListener('click', () => {
-            this.time_countdown();
-            this.showQuestion();
-            this.startTestBtn.disabled = true;
-            this.resetBtn.disabled = false;
-            this.resultBtn.style.display = 'inline-block';
-        })
-
-        this.resultBtn.addEventListener('click', () => {
-            this.confirmBox("Bạn muốn hoàn thành bài kiểm tra ?", () => {
-                clearTimeout(t);
-                this.showResult(this.isCorrectAnswer);
-                this.hightlightCorrectAnswer();
+        this.startTestBtn.onclick = () => {
+            this.popupConfirm("Bắt đầu làm bài?", () => {
+                this.start();
             });
-        })
+        }
+
+        this.resultBtn.onclick = () => {
+            this.popupConfirm("Bạn muốn hoàn thành bài kiểm tra ?", () => {
+                this.stop();
+            });
+        }
+
+
     }
-
+    start() {
+        this.showQuestion();
+        this.time_countdown();
+        this.startTestBtn.disabled = true;
+        this.resetBtn.disabled = false;
+        this.resultBtn.style.display = 'inline-block';
+    }
+    stop() {
+        clearTimeout(t);
+        this.showResult(this.isCorrectAnswer);
+        this.hightlightCorrectAnswer();
+        // this.popupBox.querySelector('.confirm-icon img').src = "img/question_mark.png"
+        this.popupConfirm(this.result);
+        this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
+        document.querySelectorAll("input").forEach((input) => {
+            input.disabled = true;
+        });
+    }
     randomQuestion() {
-
+        let arr = [];
         for (let index = 0; index < numOfQuestion; index++) {
             question_index = Math.floor(Math.random() * questionsCollection.length);
             questionArr.push(questionsCollection[question_index]);
-
+            questionsCollection.splice(question_index,1);
+            console.log(questionsCollection.length);            
         }
+        console.log(questionArr);
     }
 
     showQuestionScreen() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('test-container').style.display = 'block';
-        document.getElementById('reset-btn-question').disabled = true;
+        // document.getElementById('reset-btn-question').disabled = true;
     }
 
     formatNumber(number) {
@@ -378,17 +398,18 @@ class Test {
         }
         if (minutes < 0) {
             clearTimeout(t);
-            this.alertBox("Hết thời gian - Xem điểm nào !!!", () => { this.showResult() })
+            this.popupConfirm("Hết thời gian - Xem kết quả nào !!! 🤩🤩🤩", () => {
+                this.stop();
+            });
+            this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
             minutes = seconds = 0;
         }
         this.timeCountdown.innerHTML = this.formatNumber(minutes) + ' Phút :' + this.formatNumber(seconds) + ' Giây ';
     }
 
     refresh() {
-        let alert_reset = confirm("Bạn muốn làm lại từ đầu !!!");
-        if (alert_reset) {
-            window.location.reload();
-        }
+        window.location.reload();
+
     }
 
     //Hien thi cau hoi
@@ -423,8 +444,6 @@ class Test {
                 </div>
              </div>
             `
-
-
         });
     }
 
@@ -432,15 +451,12 @@ class Test {
         let myAnswersElemt = document.querySelectorAll('input:checked');
         myAnswersElemt.forEach((answerElemt) => {
             let hightlight = answerElemt.nextElementSibling;
-            console.log(hightlight);
-            let answer = answerElemt.value;
-            // console.log(answer);
+            let myAnswer = answerElemt.value;
             let indexQuestion = answerElemt.name.slice(-1);
-            // console.log("q " + indexQuestion);
-            let check = callbackCheck(questionArr[indexQuestion], answer);
+            let check = callbackCheck(questionArr[indexQuestion], myAnswer);
             if (check) {
                 numOfCorrect++;
-                hightlight.className = 'correct';
+                hightlight.className = '_correct';
 
             } else {
                 numOfIncorrect++;
@@ -451,19 +467,18 @@ class Test {
         this.resultBtn.disabled = true;
         window.scroll(0, 0);
         document.getElementById('result').style.display = 'block';
-        document.getElementById('result').innerHTML =
+        this.result =
             "Số câu đúng: " + numOfCorrect +
-            "<br>Số câu Sai: " + numOfIncorrect +
-            "<br>Số câu chưa làm: " + numOfNotCheck;
+            "<br>Số câu sai: " + numOfIncorrect +
+            "<br>Số câu chưa làm: " + numOfNotCheck +
+            "<br> Tổng Điểm: " + numOfCorrect * 10;
+        document.getElementById('result').innerHTML = this.result;
     }
 
     isCorrectAnswer(question, myAnswer) {
-        // let myAnswerElement = document.querySelector(`input[value="${myAnswer}"] + span`);
         if (myAnswer == question.correct) {
-            // myAnswerElement.className="correct";
             return true;
         } else {
-            // myAnswerElement.className="incorrect";
             return false;
         }
     }
@@ -477,27 +492,18 @@ class Test {
         })
     }
 
-    confirmBox(mess, callback) {
+    popupConfirm(mess, callback) {
         this.popupBox.style.display = 'flex';
         this.popupBox.querySelector('#confirm-text').innerHTML = mess;
-        this.popupBox.querySelector('#confirm-btn-Ok').addEventListener("click", () => {
+        this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'inline-block';
+        this.popupBox.querySelector('#confirm-btn-Ok').onclick = () => {
             this.popupBox.style.display = 'none';
             callback();
-        })
+        }
         this.popupBox.querySelector('#confirm-btn-cancel').onclick = () => {
             this.popupBox.style.display = 'none';
-        };
+        }
     }
 
-    alertBox(mess, callback) {
-        this.popupBox.style.display = 'flex';
-        this.popupBox.querySelector('#confirm-text').innerHTML = mess;
-        this.popupBox.querySelector('#confirm-btn-Ok').innerHTML = "Kết Quả"
-        this.popupBox.querySelector('#confirm-btn-Ok').addEventListener("click", () => {
-            this.popupBox.style.display = 'none';
-            callback();
-        })
-        this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
-    }
 }
 var test = new Test();

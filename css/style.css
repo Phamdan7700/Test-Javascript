@@ -3,20 +3,18 @@
     padding: 0;
 }
 body {
-    background: url(/img/klee-587479_1280.png) no-repeat fixed  ;
+    background: url(../img/klee-587479_1280.png) no-repeat fixed  ;
     background-size: cover;     
 }
 #welcome {   
-    background:url(/img/house-163526_1280.jpg) no-repeat center ;
+    background:url(../img/house-163526_1280.jpg) no-repeat center ;
     background-size: cover;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    display: flex; 
-     
-       
+    display: flex;       
 }
 #welcome-btn {
 margin: auto ;
@@ -32,7 +30,7 @@ text-align: center;
 #title-test {
     height: 20vh;
     padding: 20px;
-    background: url(/img/city-1252643_1280.png) no-repeat center ;
+    background: url(../img/city-1252643_1280.png) no-repeat center ;
     background-size: contain;
 }
 .btn{
@@ -44,13 +42,20 @@ text-align: center;
     border: none; 
     border-radius: 10px; 
     cursor: pointer; 
+    outline: none;
 }
 .start-btn{
     font-size: 2rem;
     padding: 20px;
+    box-shadow: 0 9px #789;
 }
+
 .start-btn:hover {
     background-color: blue;
+}
+.start-btn:active {
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }
 #result-btn-click {
     background-color: green;   
@@ -63,16 +68,18 @@ text-align: center;
 #result-btn-click:hover {
     background: red;
 }
-
+#result-box {
+    display: flex;
+    justify-content: flex-end;
+}
 #result {
     display: none;
     text-align: left;
-    margin-left: 70%;
+    margin-right: 20px;
     padding: 5px 30px;
     font-size: 2rem;
-    border: 5px double red;
-    background-color:orange;
-    /* display: none; */
+    border: 5px double orangered;
+    background-color:gold;
 }
 
 #time-coutdown {
@@ -89,13 +96,13 @@ text-align: center;
 }
 .answer > span > span{
     display: inline-block;    
-    margin-right: 20px;
+    padding: 0 10px;
 }
 #question-contanier {
     display: none;
     font-size: 1.5em;
-    padding-left: 200px;
-    background-color: rgb(175, 170, 170,0.3);
+    padding: 10px 100px;
+    background-color: rgb(175, 170, 170,0.35);
 }
 input[type="radio"] {
     transform: scale(1.5);
@@ -105,6 +112,22 @@ input[type="radio"] {
 .correct {
     background-color: green;
 }
+._correct {
+    background-color: green;
+    border-bottom: 2px solid orangered;
+    position: relative;
+}
+._correct::after {
+    content: "\2713";
+    color: blue;
+    font-size:1.5em;
+    margin-left: 20px;
+    font-weight: bolder;
+    position: absolute;
+    right:  - 50px;
+    top: -10px;
+}
+
 .incorrect {
     background-color: red;
 }
@@ -119,8 +142,8 @@ input[type="radio"] {
 }
 #popup-confirm {
     margin: auto;
-    border: 3px solid orange;
-    border-top: 15px solid orange;
+    border: 3px solid orangered;
+    border-top: 15px solid orangered;
     font-size: 1.5rem;
     background: #fff;
     color: #000;
@@ -132,7 +155,7 @@ input[type="radio"] {
 }
 .confirm-icon {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 #confirm-btn {
     display: flex;
@@ -147,5 +170,8 @@ input[type="radio"] {
 }
 .btn-ok {
     background: green;
+}
+.btn-cancel {
+    background:gold;
 }
 
