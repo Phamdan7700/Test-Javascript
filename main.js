@@ -1,5 +1,5 @@
 var minutes = 0;
-var seconds = 10;
+var seconds = 05;
 var t;
 var numOfCorrect = 0;
 var numOfIncorrect = 0;
@@ -305,6 +305,26 @@ const questionsCollection = [
         ],
         correct: '6'
     },
+    {
+        question: 'Con vật nào dưới đây không thể bơi?',
+        answer: [
+            'Cá',
+            'Chim Cánh Cụt',
+            'Vịt',
+            'Voi'
+        ],
+        correct: 'Voi'
+    },
+    {
+        question: 'Tổ hợp phím nào  trên bàn phím máy tính dùng để copy?',
+        answer: [
+            'Ctr + S',
+            'Ctr + C',
+            'Ctr + V',
+            'Ctr + X'
+        ],
+        correct: 'Ctr + C'
+    },
 
 
 
@@ -312,8 +332,6 @@ const questionsCollection = [
 const questionArr = [];
 var question_index;
 var numOfQuestion = 10;
-
-
 
 
 class Test {
@@ -327,27 +345,28 @@ class Test {
         this.resultBtn = document.getElementById('result-btn-click');
         this.popupBox = document.getElementById('popup');
         this.resetBtn = document.getElementById('reset-btn-question');
-
+        // Bat dau vao giao dien 
         this.btnWelcome.onclick = this.showQuestionScreen;
+        // Random cau hoi
         this.randomQuestion();
-        this.resetBtn.addEventListener('click', () => {
+        this.resetBtn.onclick = () => {
             this.popupConfirm("Bạn muốn làm lại từ đầu !!!", this.refresh);
 
-        });
+        };
         this.startTestBtn.onclick = () => {
             this.popupConfirm("Bắt đầu làm bài?", () => {
                 this.start();
             });
         }
-
+        // Hien thi ket qua
         this.resultBtn.onclick = () => {
             this.popupConfirm("Bạn muốn hoàn thành bài kiểm tra ?", () => {
                 this.stop();
             });
         }
 
-
     }
+    // Hien cau hoi vaf bat dau lam bai
     start() {
         this.showQuestion();
         this.time_countdown();
@@ -355,38 +374,42 @@ class Test {
         this.resetBtn.disabled = false;
         this.resultBtn.style.display = 'inline-block';
     }
+    // Dung bai lam
     stop() {
         clearTimeout(t);
-        this.showResult(this.isCorrectAnswer);
         this.hightlightCorrectAnswer();
-        // this.popupBox.querySelector('.confirm-icon img').src = "img/question_mark.png"
-        this.popupConfirm(this.result);
+        this.showResult(this.isCorrectAnswer);
+        this.popupConfirm(this.result, () => {
+        this.showResultBox();
+        });
+        this.popupBox.querySelector('.confirm-icon img').src = "img/notice.png"
         this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
         document.querySelectorAll("input").forEach((input) => {
             input.disabled = true;
         });
     }
+    // Chon cau hoi ngau nhien
     randomQuestion() {
         let arr = [];
         for (let index = 0; index < numOfQuestion; index++) {
             question_index = Math.floor(Math.random() * questionsCollection.length);
             questionArr.push(questionsCollection[question_index]);
-            questionsCollection.splice(question_index,1);
-            console.log(questionsCollection.length);            
+            questionsCollection.splice(question_index, 1);
+            console.log(questionsCollection.length);
         }
         console.log(questionArr);
     }
-
+    // Hien cau hoi khi start
     showQuestionScreen() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('test-container').style.display = 'block';
         // document.getElementById('reset-btn-question').disabled = true;
     }
-
+    // Dinh dang hien thi thoi gian
     formatNumber(number) {
         return number < 10 ? '0' + number : number;
     }
-
+    // Dem nguoc thoi gian
     time_countdown() {
         t = setTimeout(() => {
             this.time_countdown();
@@ -401,6 +424,7 @@ class Test {
             this.popupConfirm("Hết thời gian - Xem kết quả nào !!! 🤩🤩🤩", () => {
                 this.stop();
             });
+            this.popupBox.querySelector('.confirm-icon img').src = "img/notice.png";
             this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
             minutes = seconds = 0;
         }
@@ -446,7 +470,7 @@ class Test {
             `
         });
     }
-
+    // Kiem tra dap an  va hien thi ket qua
     showResult(callbackCheck) {
         let myAnswersElemt = document.querySelectorAll('input:checked');
         myAnswersElemt.forEach((answerElemt) => {
@@ -466,15 +490,18 @@ class Test {
         });
         this.resultBtn.disabled = true;
         window.scroll(0, 0);
-        document.getElementById('result').style.display = 'block';
         this.result =
             "Số câu đúng: " + numOfCorrect +
             "<br>Số câu sai: " + numOfIncorrect +
             "<br>Số câu chưa làm: " + numOfNotCheck +
             "<br> Tổng Điểm: " + numOfCorrect * 10;
+        
+    }
+    showResultBox() {
+        document.getElementById('result').style.display = 'block';
         document.getElementById('result').innerHTML = this.result;
     }
-
+    // Kiem tra tung dap an
     isCorrectAnswer(question, myAnswer) {
         if (myAnswer == question.correct) {
             return true;
@@ -482,7 +509,7 @@ class Test {
             return false;
         }
     }
-
+    // Danh dau dap an dung sai
     hightlightCorrectAnswer() {
         let answersArr = document.querySelectorAll('.answer');
         answersArr.forEach((answerElemt, indexQuestion) => {
@@ -491,10 +518,11 @@ class Test {
             hightlightAnswer.classList.add('correct');
         })
     }
-
+    // Popup thong bao
     popupConfirm(mess, callback) {
         this.popupBox.style.display = 'flex';
         this.popupBox.querySelector('#confirm-text').innerHTML = mess;
+        this.popupBox.querySelector('.confirm-icon img').src = "img/question_mark.png";
         this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'inline-block';
         this.popupBox.querySelector('#confirm-btn-Ok').onclick = () => {
             this.popupBox.style.display = 'none';
