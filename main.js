@@ -1,5 +1,5 @@
-var minutes = 0;
-var seconds = 05;
+var minutes = 00;
+var seconds = 60;
 var t;
 var numOfCorrect = 0;
 var numOfIncorrect = 0;
