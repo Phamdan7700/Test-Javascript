@@ -1,9 +1,9 @@
 var minutes = 0;
-var seconds = 05;
+var seconds = 30;
 var t;
 var numOfCorrect = 0;
 var numOfIncorrect = 0;
-var numOfNotCheck = 10;
+var numOfNotCheck = 0;
 const questionsCollection = [
     {
         question: 'Đội bóng đã từng đoạt nhiều chức vô địch Copa America nhất?',
@@ -76,7 +76,7 @@ const questionsCollection = [
         correct: 'Men – Đen '
     },
     {
-        question: 'Theo đơn vi đo thông tin trong máy tính thì 1 byte bằng bao nhiêu bit ? ',
+        question: 'Theo đơn vị đo thông tin trong máy tính thì 1 byte bằng bao nhiêu bit ? ',
         answer: [
             '4',
             '6',
@@ -85,6 +85,7 @@ const questionsCollection = [
         ],
         correct: '8'
     },
+    
     {
         question: 'Phần mềm nào sau đây là phần mềm diệt virus ?',
         answer: [
@@ -228,7 +229,7 @@ const questionsCollection = [
     {
         question: 'Bộ phim "Chị Dậu" được chuyển thể từ tác phẩm nào?',
         answer: [
-            'Người mẹ cầm súng	• ',
+            'Người mẹ cầm súng',
             'Vợ chồng A Phủ',
             'Tắt đèn',
             'Tuổi thơ dữ dội'
@@ -337,7 +338,6 @@ var numOfQuestion = 10;
 class Test {
     constructor() {
         this.result = "";
-        this.welcomeText = document.getElementById('welcomeText');
         this.btnWelcome = document.getElementById('btn-welcome');
         this.timeCountdown = document.getElementById('time-coutdown');
         this.timeCountdown.innerHTML = this.formatNumber(minutes) + ' Phút :' + this.formatNumber(seconds) + ' Giây ';
@@ -348,13 +348,13 @@ class Test {
         // Bat dau vao giao dien 
         this.btnWelcome.onclick = this.showQuestionScreen;
         // Random cau hoi
-        this.randomQuestion();
         this.resetBtn.onclick = () => {
             this.popupConfirm("Bạn muốn làm lại từ đầu !!!", this.refresh);
 
         };
         this.startTestBtn.onclick = () => {
             this.popupConfirm("Bắt đầu làm bài?", () => {
+                this.randomQuestion();
                 this.start();
             });
         }
@@ -366,27 +366,29 @@ class Test {
         }
 
     }
-    // Hien cau hoi vaf bat dau lam bai
+    // Hien cau hoi va bat dau lam bai
     start() {
         this.showQuestion();
         this.time_countdown();
         this.startTestBtn.disabled = true;
-        this.resetBtn.disabled = false;
         this.resultBtn.style.display = 'inline-block';
+        this.resetBtn.disabled = true;
+
     }
     // Dung bai lam
     stop() {
         clearTimeout(t);
-        this.hightlightCorrectAnswer();
-        this.showResult(this.isCorrectAnswer);
+        this.showResult();
         this.popupConfirm(this.result, () => {
-        this.showResultBox();
+            this.showResultBox();
         });
         this.popupBox.querySelector('.confirm-icon img').src = "img/notice.png"
         this.popupBox.querySelector('#confirm-btn-cancel').style.display = 'none';
         document.querySelectorAll("input").forEach((input) => {
             input.disabled = true;
         });
+        this.resetBtn.disabled = false;
+
     }
     // Chon cau hoi ngau nhien
     randomQuestion() {
@@ -395,15 +397,12 @@ class Test {
             question_index = Math.floor(Math.random() * questionsCollection.length);
             questionArr.push(questionsCollection[question_index]);
             questionsCollection.splice(question_index, 1);
-            console.log(questionsCollection.length);
         }
-        console.log(questionArr);
     }
     // Hien cau hoi khi start
     showQuestionScreen() {
         document.getElementById('welcome').style.display = 'none';
         document.getElementById('test-container').style.display = 'block';
-        // document.getElementById('reset-btn-question').disabled = true;
     }
     // Dinh dang hien thi thoi gian
     formatNumber(number) {
@@ -435,90 +434,79 @@ class Test {
         window.location.reload();
 
     }
+    showResult() {
+        for (let index = 0; index < numOfQuestion; index++) {
+            let thisQuestion = document.querySelector(`.q${index}`);            
+            let myAnswer = document.forms[`question_${index}`][`answer_${index}`].value;
+            let hightlight = thisQuestion.querySelector(`input[value="${myAnswer}"] + span`);
+            if (myAnswer == questionArr[index].correct) {
+                hightlight.className = 'check-correct';
+                // thisQuestion.querySelector('.question-number').classList.add('correct');
+                numOfCorrect++;
+            }
+            else if (myAnswer == '') {
+                numOfNotCheck++;
+                thisQuestion.querySelector('.question-title').classList.add('not-check');
+            } else {
+                hightlight.className = 'check-incorrect';
+                numOfIncorrect++;
+                // thisQuestion.querySelector('.question-number').classList.add('incorrect');
 
+            }
+            thisQuestion.querySelector(`input[value="${questionArr[index].correct}"] + span`).classList.add(`_correct`);
+        }
+        this.resultBtn.disabled = true;
+        window.scroll(0, 0);
+        this.result = 
+            "Số câu đúng: " + numOfCorrect + '/' + numOfQuestion +
+            "<br>Số câu sai: " + numOfIncorrect + '/' + numOfQuestion +
+            "<br>Số câu chưa chọn: " + numOfNotCheck + '/' + numOfQuestion +
+            "<br>Số điểm đạt được: " + numOfCorrect * 10 + ' điểm <br>'; 
+    }
     //Hien thi cau hoi
     showQuestion() {
         document.getElementById('question-contanier').style.display = 'block';
         questionArr.forEach((question, index) => {
             document.getElementById('question-contanier').innerHTML +=
                 `
-            <div class="sub-question">
+            <div class="sub-question q${index}" name="sub-question">
                 <div class="question-title" >
-                    <span class="question-number"><b>Câu hỏi ${index + 1}</b>: </span>
-                    <span class="question-title-content"> ${question.question} </span>
+                    <span class="question-number"><b>Câu hỏi ${index + 1}:</b></span>
+                    <span> ${question.question}</span>
                 </div>
 
-                <div class="answer"  >
-                    <span > 
+                <form class="answer" id="question_${index}" >
+                    <label> 
                         <input type="radio" name="answer_${index}" value="${question.answer[0]}">
                         <span class="" > ${question.answer[0]} </span>
-                    </span>
-                    <span > 
+                    </label>
+                    <label> 
                         <input type="radio" name="answer_${index}" value="${question.answer[1]}" >
                         <span class=""> ${question.answer[1]} </span>
-                    </span>
-                    <span > 
+                    </label>
+                    <label> 
                         <input type="radio" name="answer_${index}" value="${question.answer[2]}" >
                         <span class=""> ${question.answer[2]} </span>
-                    </span>
-                    <span > 
+                    </label>
+                    <label> 
                         <input type="radio" name="answer_${index}" value="${question.answer[3]}" >
                         <span class=""> ${question.answer[3]} </span>
-                    </span>
-                </div>
+                    </label>
+                </form>
              </div>
             `
+
         });
+
     }
     // Kiem tra dap an  va hien thi ket qua
-    showResult(callbackCheck) {
-        let myAnswersElemt = document.querySelectorAll('input:checked');
-        myAnswersElemt.forEach((answerElemt) => {
-            let hightlight = answerElemt.nextElementSibling;
-            let myAnswer = answerElemt.value;
-            let indexQuestion = answerElemt.name.slice(-1);
-            let check = callbackCheck(questionArr[indexQuestion], myAnswer);
-            if (check) {
-                numOfCorrect++;
-                hightlight.className = '_correct';
-
-            } else {
-                numOfIncorrect++;
-                hightlight.className = 'incorrect';
-            }
-            numOfNotCheck = numOfQuestion - numOfCorrect - numOfIncorrect;
-        });
-        this.resultBtn.disabled = true;
-        window.scroll(0, 0);
-        this.result =
-            "Số câu đúng: " + numOfCorrect +
-            "<br>Số câu sai: " + numOfIncorrect +
-            "<br>Số câu chưa làm: " + numOfNotCheck +
-            "<br> Tổng Điểm: " + numOfCorrect * 10;
-        
-    }
+    
     showResultBox() {
         document.getElementById('result').style.display = 'block';
         document.getElementById('result').innerHTML = this.result;
     }
-    // Kiem tra tung dap an
-    isCorrectAnswer(question, myAnswer) {
-        if (myAnswer == question.correct) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    // Danh dau dap an dung sai
-    hightlightCorrectAnswer() {
-        let answersArr = document.querySelectorAll('.answer');
-        answersArr.forEach((answerElemt, indexQuestion) => {
-            let correctAnswer = questionArr[indexQuestion].correct;
-            let hightlightAnswer = answerElemt.querySelector(`input[value="${correctAnswer}"] + span`);
-            hightlightAnswer.classList.add('correct');
-        })
-    }
-    // Popup thong bao
+
+    /*  Popup thong bao */
     popupConfirm(mess, callback) {
         this.popupBox.style.display = 'flex';
         this.popupBox.querySelector('#confirm-text').innerHTML = mess;
