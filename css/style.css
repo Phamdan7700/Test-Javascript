@@ -133,6 +133,11 @@ input:checked + span {
     border-radius: 10px;
     border-width: 5px !important;
 }
+@media screen and (max-width:720px){
+    #question-contanier {
+       padding: 0 10px;
+    }
+}
 input[type="radio"] {
     transform: scale(1.5);
     cursor: pointer;    
