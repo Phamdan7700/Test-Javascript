@@ -81,7 +81,7 @@ body {
     text-align: left;
     margin-right: 20px;
     margin-bottom: 10px;
-    padding: 5px 30px;
+    padding: 5px 35px;
     font-size: 2rem;
     /* border: 3px solid orangered;
     border-top: 10px solid orangered; */
@@ -120,6 +120,8 @@ body {
 }
 input:checked + span {
     background: yellow;
+    border-radius: 10px ;
+    border: 1px solid green;
 }
 #question-contanier {
     display: none;
@@ -137,15 +139,23 @@ input[type="radio"] {
 }
 ._correct {
     background-color: green !important;
+    border-radius: 10px ;
+    border: 1px solid green;
 }
-.correct {
-    background:green !important;;
-}
-.incorrect {
+/* .correct {
+    background:green !important;
+    border-radius: 10px ;
+    border: 1px solid green;
+} */
+/* .incorrect {
     background: red !important;
-}
+    border-radius: 10px ;
+    border: 1px solid green;
+} */
 .not-check {
-    background: rgba(255, 0, 0, 0.555) !important;
+    background: rgba(255, 0, 0, 0.5) !important;
+    border-radius: 10px ;
+    border: 1px solid green;
 }
 .check-correct {
     background-color: green !important;
