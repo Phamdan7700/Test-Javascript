@@ -503,7 +503,7 @@ class Test {
     
     showResultBox() {
         document.getElementById('result').style.display = 'block';
-        document.getElementById('result').innerHTML = this.result;
+        document.getElementById('result').innerHTML += this.result;
     }
 
     /*  Popup thong bao */

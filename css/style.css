@@ -4,6 +4,7 @@
 }
 body {
     background: url(../img/klee-587479_1280.png) no-repeat fixed  ;
+    width: 100%;
     background-size: cover;     
 }
 #welcome {   
@@ -14,13 +15,18 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    display: flex;       
+    /* display: flex;  
+    flex-direction: column;   
+    align-items: center;   */
 }
-#welcome-btn {
-margin: auto ;
-text-align: center;
+.info-bg {
+    background-color: rgba(255, 255, 255, 0.452);
+    border-radius: 10px;
 }
-
+.info {
+    text-align: left;
+    font-size: 1.5rem;
+}
 #test-container {
     display: none;
 }
@@ -45,17 +51,13 @@ text-align: center;
     outline: none;
 }
 .start-btn{
-    font-size: 2rem;
-    padding: 20px;
-    background-color: orangered;
+    border: none;
+    cursor: pointer;
     animation: zoom 1s infinite ease-in-out alternate-reverse;
 }
 
-.start-btn:hover {
-    background-color: blue;
-}
 @keyframes zoom {
-    to{transform: scale(1.2);}
+    to{transform: scale(1.1);}
 }
 
 #result-btn-click {
@@ -73,6 +75,7 @@ text-align: center;
     display: flex;
     justify-content: flex-end;
 }
+
 #result {
     display: none;
     text-align: left;
@@ -80,11 +83,19 @@ text-align: center;
     margin-bottom: 10px;
     padding: 5px 30px;
     font-size: 2rem;
-    border: 3px solid orangered;
-    border-top: 10px solid orangered;
-    background-color:rgba(200, 255, 0, 0.6);
+    /* border: 3px solid orangered;
+    border-top: 10px solid orangered; */
+    /* background-color:rgba(200, 255, 0, 0.6); */
     border-radius: 5px;
+    background: url(../img/result.png) no-repeat;
+    background-size: contain;
+    height: 330px;
+   
 }
+#result img{
+    max-width: 200px;
+}
+    
 
 #time-coutdown {
     font-size: 1.5rem;
@@ -112,9 +123,13 @@ input:checked + span {
 }
 #question-contanier {
     display: none;
+    max-width: 1100px;
+    margin: 0 auto;
     font-size: 1.5em;
     padding: 10px 100px;
-    background-color: rgb(175, 170, 170,0.35);
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    border-width: 5px !important;
 }
 input[type="radio"] {
     transform: scale(1.5);
