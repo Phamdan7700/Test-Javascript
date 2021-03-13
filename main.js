@@ -502,7 +502,7 @@ class Test {
     // Kiem tra dap an  va hien thi ket qua
     
     showResultBox() {
-        document.getElementById('result').style.display = 'block';
+        document.getElementById('result-box').style.display = 'flex';
         document.getElementById('result').innerHTML += this.result;
     }
 
